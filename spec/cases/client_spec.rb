@@ -160,6 +160,13 @@ describe LinkedIn::Client do
             cons.last.last_name.should == 'Yuchnewicz'
           end
         end
+
+        describe "#connections_count" do
+          it "should retrieve connections for the authenticated user" do
+            stub_get("/v1/people/~/connections", "connections.xml")
+            client.connections_count.should == 146
+          end
+        end
       end
 
       context "by id" do

@@ -29,7 +29,7 @@ module LinkedIn
       Profile.from_xml(get(path))
     end
 
-    def connections(options={})
+    def connections_path(options = {})
       path = "#{person_path(options)}/connections"
       fields = options[:fields] || LinkedIn.default_profile_fields
 
@@ -38,8 +38,16 @@ module LinkedIn
       elsif fields
         path +=":(#{fields.map{ |f| f.to_s.gsub("_","-") }.join(',')})"
       end
+      path
+    end
 
-      Connections.from_xml(get(path)).profiles
+    def connections(options={})
+      Connections.from_xml(get(connections_path(options))).profiles
+    end
+
+    def connections_count(options = {})
+      @xml = Nokogiri::XML(get(connections_path(options)))
+      Integer(@xml.css('connections[total]').first['total'])
     end
 
     def search(options={})
