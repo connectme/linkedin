@@ -6,13 +6,18 @@ module LinkedIn
     PROFILE_FIELDS = %w[id first_name last_name headline industry
                         current_status current_status_timestamp summary
                         specialties proposal_comments associations honors
-                        interests picture_url distance num_recommenders public_profile_url
-                        num_connections]
+                        interests picture_url distance num_recommenders public_profile_url]
 
     PROFILE_FIELDS.each do |f|
       define_method(f.to_sym) do
         @doc.xpath("./person/#{f.gsub(/_/,'-')}").text
       end
+    end
+
+    # usage: client.profile(fields: [:num_connections]).num_connections
+    # num-connections field is not included by default
+    def num_connections
+      @num_connections ||= @doc.xpath('/person/num-connections').text
     end
 
     def birthdate
