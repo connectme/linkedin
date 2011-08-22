@@ -38,6 +38,11 @@ module LinkedIn
       elsif fields
         path +=":(#{fields.map{ |f| f.to_s.gsub("_","-") }.join(',')})"
       end
+
+      if options[:modified] && options[:modified_since]
+        path += "?modified=#{options[:modified]}&modified-since=#{options[:modified_since]}"
+      end
+
       path
     end
 
